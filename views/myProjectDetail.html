@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dumbways Day 7 Task</title>
+    <link rel="stylesheet" href="../public/css/navigasi.css">
+    <link rel="stylesheet" href="../public/css/font.css">
+    <link rel="stylesheet" href="../public/css/body.css">
+    <link rel="stylesheet" href="../public/css/detailProject.css">
+    <link rel="icon" type="image/x-icon" href="../public/favicon/favicon.ico">
+</head>
+<body>
+    <nav>
+        <div class="kotakNav">
+            <div class="navLeft">
+                <ul>
+                    <li>
+                        <a href="/"><img src="../public/img/dumbways.png" alt="Dumbways Logo" class="logo"></a>
+                    </li>
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    <li>
+                        <a href="/project">My Project</a>
+                    </li>
+                </ul>
+            </div>
+        
+            <div class="contact">
+                <div>
+                    <a href="/contact">Contact Me</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="projectDetail">
+        <div class="projectBox">
+            <div class="judul">
+                <h1>{{.Project.ProjectName}}</h1>
+            </div>
+            <div class="projectMetas">
+                <div class="heroImg">
+                    <img src="${dataForm[i].renderImg}">
+                </div>
+                <div class="projectInfo">
+                    <div class="duration">
+                        <h3>Duration</h3>
+                        <div class="startEndDate">
+                            <img src="img/calendar.png">
+                            <p>{{.Project.StartDate}} - {{.Project.EndDate}}</p>
+                        </div>
+                        <div class="durationInfo">
+                            <img src="img/stopwatch.png">
+                            <p>${dataForm[i].duration}</p>
+                        </div>
+                    </div>
+                    <div class="techno">
+                        <h3>Technology</h3>
+                        <div class="techGrid">
+                            <div class="node">
+                                <img src="${dataForm[i].nodeJs}">
+                                <p>${dataForm[i].node}</p>
+                            </div>
+                            <div class="vue">
+                                <img src="${dataForm[i].vueJs}">
+                                <p>${dataForm[i].vue}</p>
+                            </div>
+                            <div class="react">
+                                <img src="${dataForm[i].reactJs}">
+                                <p>${dataForm[i].react}</p>
+                            </div>
+                            <div class="typeScript">
+                                <img src="${dataForm[i].typeScript}">
+                                <p>${dataForm[i].ts}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="projectContents">
+                <p>{{.Project.Description}}</p>
+                <p>
+                    {{.Contents}}
+                </p>
+                <p>
+                    {{.Contents}}
+                </p>
+                <p>
+                    {{.Contents}}
+                </p>
+                <p>
+                    {{.Contents}}
+                </p>
+                <p>
+                    {{.Contents}}
+                </p>
+        
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
+
+
+
