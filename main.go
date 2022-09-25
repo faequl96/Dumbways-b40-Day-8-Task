@@ -22,15 +22,41 @@ func main() {
 	route.HandleFunc("/project/{index}", myProjectDetail).Methods("GET")
 	route.HandleFunc("/form-project", myProjectForm).Methods("GET")
 	route.HandleFunc("/add-project", myProjectDataForm).Methods("POST")
-	route.HandleFunc("/delete-project/{index}", myProjectDelete).Methods("GET")
-	route.HandleFunc("/edit-project/{id}", myProjectEdited).Methods("POST")
 	route.HandleFunc("/form-edit-project/{index}", myProjectFormEditProject).Methods("GET")
+	route.HandleFunc("/edit-project/{id}", myProjectEdited).Methods("POST")
+	route.HandleFunc("/delete-project/{index}", myProjectDelete).Methods("GET")
 
 	route.HandleFunc("/contact", contact).Methods(("GET"))
 
 	fmt.Println("Server running at localhost port 5000")
 
 	http.ListenAndServe("localhost:5000", route)
+}
+
+type Form struct {
+	ProjectName string
+	StartDate   string
+	EndDate     string
+	Description string
+	Id          int
+	Duration    string
+}
+
+var dataForm = []Form{
+	{
+		ProjectName: "Project Name",
+		StartDate:   "2022-09-12",
+		EndDate:     "2022-09-19",
+		Description: "Description",
+		Id:          0,
+	},
+	{
+		ProjectName: "Project Name",
+		StartDate:   "2022-09-20",
+		EndDate:     "2022-09-25",
+		Description: "Description",
+		Id:          1,
+	},
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -71,32 +97,6 @@ func myProjectForm(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type Form struct {
-	ProjectName string
-	StartDate   string
-	EndDate     string
-	Description string
-	Id          int
-	Duration    string
-}
-
-var dataForm = []Form{
-	{
-		ProjectName: "Project Name",
-		StartDate:   "2022-09-12",
-		EndDate:     "2022-09-19",
-		Description: "Description",
-		Id:          0,
-	},
-	{
-		ProjectName: "Project Name",
-		StartDate:   "2022-09-20",
-		EndDate:     "2022-09-25",
-		Description: "Description",
-		Id:          1,
-	},
-}
-
 func myProjectDataForm(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 
@@ -114,7 +114,7 @@ func myProjectDataForm(w http.ResponseWriter, r *http.Request) {
 		StartDate:   startDate,
 		EndDate:     endDate,
 		Description: description,
-		Id:          len(dataForm),
+		// Id:          len(dataForm),
 		// Duration:    time.Now().String(),
 	}
 
@@ -193,7 +193,7 @@ func myProjectEdited(w http.ResponseWriter, r *http.Request) {
 		StartDate:   startDate,
 		EndDate:     endDate,
 		Description: description,
-		Id:          id,
+		// Id:          id,
 		// Duration:    time.Now().String(),
 	}
 
@@ -219,7 +219,7 @@ func myProjectFormEditProject(w http.ResponseWriter, r *http.Request) {
 				StartDate:   data.StartDate,
 				EndDate:     data.EndDate,
 				Description: data.Description,
-				Id:          data.Id,
+				Id:          index,
 			}
 		}
 	}
