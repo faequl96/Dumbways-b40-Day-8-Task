@@ -21,7 +21,7 @@ func main() {
 	route.HandleFunc("/project", myProject).Methods("GET")
 	route.HandleFunc("/project/{index}", myProjectDetail).Methods("GET")
 	route.HandleFunc("/form-project", myProjectForm).Methods("GET")
-	route.HandleFunc("/add-project", myProjectDataForm).Methods("POST")
+	route.HandleFunc("/add-project", myProjectData).Methods("POST")
 	route.HandleFunc("/form-edit-project/{index}", myProjectFormEditProject).Methods("GET")
 	route.HandleFunc("/edit-project/{id}", myProjectEdited).Methods("POST")
 	route.HandleFunc("/delete-project/{index}", myProjectDelete).Methods("GET")
@@ -48,14 +48,14 @@ var dataForm = []Form{
 		StartDate:   "2022-09-12",
 		EndDate:     "2022-09-19",
 		Description: "Description",
-		Id:          0,
+		// Id:          0,
 	},
 	{
 		ProjectName: "Project Name",
 		StartDate:   "2022-09-20",
 		EndDate:     "2022-09-25",
 		Description: "Description",
-		Id:          1,
+		// Id:          1,
 	},
 }
 
@@ -69,6 +69,9 @@ func home(w http.ResponseWriter, r *http.Request) {
 	template.Execute(w, nil)
 }
 
+// 3
+// menampilkan halaman myProject.html
+// setelah diredirect oleh func myProjectData dan func myProjectEdited, func ini akan menampilkan halaman myProject.html serta mengisikan data yang telah didapat dari func myProjectData dan mengisikan index untuk route projectdetail, route edit, dan route delete
 func myProject(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
@@ -87,6 +90,9 @@ func myProject(w http.ResponseWriter, r *http.Request) {
 	// w.WriteHeader(http.StatusOK)
 }
 
+// 1
+// menampilkan myProjectForm.html
+// ketika menekan tombol create, func ini akan memanggil route /add-project yang berisi func myProjectData
 func myProjectForm(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("views/myProjectForm.html")
 
@@ -97,7 +103,10 @@ func myProjectForm(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func myProjectDataForm(w http.ResponseWriter, r *http.Request) {
+// 2
+// mengisikan arraydata dengan data yang telah diinput di form
+// setelah mengisi arraydata kemudian akan meredirect ke route /project yang berisi func myProject
+func myProjectData(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 
 	if err != nil {
@@ -166,14 +175,54 @@ func myProjectDetail(w http.ResponseWriter, r *http.Request) {
 func myProjectDelete(w http.ResponseWriter, r *http.Request) {
 	index, _ := strconv.Atoi(mux.Vars(r)["index"])
 	// fmt.Println(index)
+	// fmt.Println(dataForm[index+1:])
 
 	dataForm = append(dataForm[:index], dataForm[index+1:]...)
 
-	fmt.Println(dataForm)
+	// fmt.Println(dataForm)
 
 	http.Redirect(w, r, "/project", http.StatusFound)
 }
 
+// 1
+// func ini dipanggil oleh tombol edit project yang ada di masing masing card sesuai indexnya
+// menampilkan halaman myProjectFormEditProject.html sekaligus mengisikan value masing-masing field
+// ketika menekan tombol save, func ini akan menanamkan Id(query params) pada route yang akan dipanggil yaitum route /edit-project/{{Id}} yang berisi func myProjectEdited
+// Id(query params) digunakan untuk mengedit arraydata index yang ditarget
+func myProjectFormEditProject(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("views/myProjectFormEditProject.html")
+
+	index, _ := strconv.Atoi(mux.Vars(r)["index"])
+
+	ProjectEdit := Form{}
+
+	for i, data := range dataForm {
+		if index == i {
+			ProjectEdit = Form{
+				ProjectName: data.ProjectName,
+				StartDate:   data.StartDate,
+				EndDate:     data.EndDate,
+				Description: data.Description,
+				Id:          index,
+			}
+			fmt.Println(ProjectEdit)
+		}
+	}
+
+	response := map[string]interface{}{
+		"Project": ProjectEdit,
+	}
+
+	if err == nil {
+		tmpl.Execute(w, response)
+	} else {
+		panic(err)
+	}
+}
+
+// 2
+// mengedit arraydata yang ditarget dengan data yang telah diinput di form edit
+// setelah mengedit arraydata kemudian akan meredirect ke route /project yang berisi func myProject
 func myProjectEdited(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
 
@@ -203,36 +252,6 @@ func myProjectEdited(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/project", http.StatusMovedPermanently)
 
-}
-
-func myProjectFormEditProject(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("views/myProjectFormEditProject.html")
-
-	index, _ := strconv.Atoi(mux.Vars(r)["index"])
-
-	ProjectEdit := Form{}
-
-	for i, data := range dataForm {
-		if index == i {
-			ProjectEdit = Form{
-				ProjectName: data.ProjectName,
-				StartDate:   data.StartDate,
-				EndDate:     data.EndDate,
-				Description: data.Description,
-				Id:          index,
-			}
-		}
-	}
-
-	response := map[string]interface{}{
-		"Project": ProjectEdit,
-	}
-
-	if err == nil {
-		tmpl.Execute(w, response)
-	} else {
-		panic(err)
-	}
 }
 
 func contact(w http.ResponseWriter, r *http.Request) {
