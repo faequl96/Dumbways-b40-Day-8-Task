@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 	"text/template"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -28,33 +29,57 @@ func main() {
 
 	route.HandleFunc("/contact", contact).Methods(("GET"))
 
-	fmt.Println("Server running at localhost port 5000")
+	fmt.Println("Server running at localhost port 8000")
 
-	http.ListenAndServe("localhost:5000", route)
+	http.ListenAndServe("localhost:8000", route)
 }
 
 type Form struct {
-	ProjectName string
-	StartDate   string
-	EndDate     string
-	Description string
-	Id          int
-	Duration    string
+	ProjectName    string
+	StartDate      string
+	EndDate        string
+	Description    string
+	Node           string
+	React          string
+	Vue            string
+	TypeScript     string
+	NodeIcon       string
+	ReactIcon      string
+	VueIcon        string
+	TypeScriptIcon string
+	Id             int
+	Duration       string
 }
 
 var dataForm = []Form{
 	{
-		ProjectName: "Project Name",
-		StartDate:   "2022-09-12",
-		EndDate:     "2022-09-19",
-		Description: "Description",
+		ProjectName:    "Dummy Project 1",
+		StartDate:      "2022-09-12",
+		EndDate:        "2022-09-19",
+		Duration:       "1 Weeks",
+		Description:    "Description Dummy Project 1",
+		Node:           "Node JS",
+		React:          "React JS",
+		Vue:            "Vue JS",
+		TypeScript:     "TypeScript",
+		NodeIcon:       "../public/img/node.png",
+		ReactIcon:      "../public/img/react.png",
+		VueIcon:        "../public/img/vue.png",
+		TypeScriptIcon: "../public/img/typescript.png",
 		// Id:          0,
 	},
 	{
-		ProjectName: "Project Name",
-		StartDate:   "2022-09-20",
-		EndDate:     "2022-09-25",
-		Description: "Description",
+		ProjectName:    "Dummy Project 2",
+		StartDate:      "2022-09-20",
+		EndDate:        "2022-09-25",
+		Duration:       "5 Days",
+		Description:    "Description Dummy Project 2",
+		Node:           "Node JS",
+		TypeScript:     "TypeScript",
+		NodeIcon:       "../public/img/node.png",
+		ReactIcon:      "",
+		VueIcon:        "",
+		TypeScriptIcon: "../public/img/typescript.png",
 		// Id:          1,
 	},
 }
@@ -117,12 +142,71 @@ func myProjectData(w http.ResponseWriter, r *http.Request) {
 	startDate := r.PostForm.Get("startDate")
 	endDate := r.PostForm.Get("endDate")
 	description := r.PostForm.Get("description")
+	node := r.PostForm.Get("nodeJs")
+	react := r.PostForm.Get("reactJs")
+	vue := r.PostForm.Get("vueJs")
+	typeScript := r.PostForm.Get("typeScript")
+	nodeIcon := ""
+	if node == "Node JS" {
+		nodeIcon = "../public/img/node.png"
+	}
+	reactIcon := ""
+	if react == "React JS" {
+		reactIcon = "../public/img/react.png"
+	}
+	vueIcon := ""
+	if vue == "Vue JS" {
+		vueIcon = "../public/img/vue.png"
+	}
+	typeScriptIcon := ""
+	if typeScript == "TypeScript" {
+		typeScriptIcon = "../public/img/typescript.png"
+	}
+
+	layout := "2006-01-02"
+	startDateParse, _ := time.Parse(layout, startDate)
+	endDateParse, _ := time.Parse(layout, endDate)
+
+	hour := 1
+	day := hour * 24
+	week := hour * 24 * 7
+	month := hour * 24 * 30
+	year := hour * 24 * 365
+
+	differHour := endDateParse.Sub(startDateParse).Hours()
+	var differHours int = int(differHour)
+	// fmt.Println(differHours)
+	days := differHours / day
+	weeks := differHours / week
+	months := differHours / month
+	years := differHours / year
+
+	var duration string
+
+	if differHours < week {
+		duration = strconv.Itoa(int(days)) + " Days"
+	} else if differHours < month {
+		duration = strconv.Itoa(int(weeks)) + " Weeks"
+	} else if differHours < year {
+		duration = strconv.Itoa(int(months)) + " Months"
+	} else if differHours > year {
+		duration = strconv.Itoa(int(years)) + " Years"
+	}
 
 	addNewDataForm := Form{
-		ProjectName: projectName,
-		StartDate:   startDate,
-		EndDate:     endDate,
-		Description: description,
+		ProjectName:    projectName,
+		StartDate:      startDate,
+		EndDate:        endDate,
+		Duration:       duration,
+		Description:    description,
+		Node:           node,
+		React:          react,
+		Vue:            vue,
+		TypeScript:     typeScript,
+		NodeIcon:       nodeIcon,
+		ReactIcon:      reactIcon,
+		VueIcon:        vueIcon,
+		TypeScriptIcon: typeScriptIcon,
 		// Id:          len(dataForm),
 		// Duration:    time.Now().String(),
 	}
@@ -152,10 +236,19 @@ func myProjectDetail(w http.ResponseWriter, r *http.Request) {
 	for i, data := range dataForm {
 		if index == i {
 			ProjectDetail = Form{
-				ProjectName: data.ProjectName,
-				StartDate:   data.StartDate,
-				EndDate:     data.EndDate,
-				Description: data.Description,
+				ProjectName:    data.ProjectName,
+				StartDate:      data.StartDate,
+				EndDate:        data.EndDate,
+				Duration:       data.Duration,
+				Description:    data.Description,
+				Node:           data.Node,
+				React:          data.React,
+				Vue:            data.Vue,
+				TypeScript:     data.TypeScript,
+				NodeIcon:       data.NodeIcon,
+				ReactIcon:      data.ReactIcon,
+				VueIcon:        data.VueIcon,
+				TypeScriptIcon: data.TypeScriptIcon,
 			}
 		}
 	}
@@ -236,12 +329,71 @@ func myProjectEdited(w http.ResponseWriter, r *http.Request) {
 	startDate := r.PostForm.Get("startDate")
 	endDate := r.PostForm.Get("endDate")
 	description := r.PostForm.Get("description")
+	node := r.PostForm.Get("nodeJs")
+	react := r.PostForm.Get("reactJs")
+	vue := r.PostForm.Get("vueJs")
+	typeScript := r.PostForm.Get("typeScript")
+	nodeIcon := ""
+	if node == "Node JS" {
+		nodeIcon = "../public/img/node.png"
+	}
+	reactIcon := ""
+	if react == "React JS" {
+		reactIcon = "../public/img/react.png"
+	}
+	vueIcon := ""
+	if vue == "Vue JS" {
+		vueIcon = "../public/img/vue.png"
+	}
+	typeScriptIcon := ""
+	if typeScript == "TypeScript" {
+		typeScriptIcon = "../public/img/typescript.png"
+	}
+
+	layout := "2006-01-02"
+	startDateParse, _ := time.Parse(layout, startDate)
+	endDateParse, _ := time.Parse(layout, endDate)
+
+	hour := 1
+	day := hour * 24
+	week := hour * 24 * 7
+	month := hour * 24 * 30
+	year := hour * 24 * 365
+
+	differHour := endDateParse.Sub(startDateParse).Hours()
+	var differHours int = int(differHour)
+	// fmt.Println(differHours)
+	days := differHours / day
+	weeks := differHours / week
+	months := differHours / month
+	years := differHours / year
+
+	var duration string
+
+	if differHours < week {
+		duration = strconv.Itoa(int(days)) + " Days"
+	} else if differHours < month {
+		duration = strconv.Itoa(int(weeks)) + " Weeks"
+	} else if differHours < year {
+		duration = strconv.Itoa(int(months)) + " Months"
+	} else if differHours > year {
+		duration = strconv.Itoa(int(years)) + " Years"
+	}
 
 	editDataForm := Form{
-		ProjectName: projectName,
-		StartDate:   startDate,
-		EndDate:     endDate,
-		Description: description,
+		ProjectName:    projectName,
+		StartDate:      startDate,
+		EndDate:        endDate,
+		Duration:       duration,
+		Description:    description,
+		Node:           node,
+		React:          react,
+		Vue:            vue,
+		TypeScript:     typeScript,
+		NodeIcon:       nodeIcon,
+		ReactIcon:      reactIcon,
+		VueIcon:        vueIcon,
+		TypeScriptIcon: typeScriptIcon,
 		// Id:          id,
 		// Duration:    time.Now().String(),
 	}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Dumbways Day 7 Task</title>
+    <title>Dumbways Day 8 Task</title>
     <link rel="stylesheet" href="../public/css/navigasi.css">
     <link rel="stylesheet" href="../public/css/font.css">
     <link rel="stylesheet" href="../public/css/this.myProject.css">
@@ -38,14 +38,14 @@
     <div class="myProject">
         <div class="judul">
             <h1>MY PROJECT</h1>
-            <a class="creatNew" href="/form-project">Creat New Project</a>
+            <a class="creatNew" href="/form-project">Create New</a>
         </div>
 
         <div class="container">
             {{range $index, $data := .Projects}}
-            <div class="card">
+            <div class="card card{{$index}}">
                 <a href="/project/{{$index}}" class="maxSizeImg">
-                    <img src="${dataForm[i].renderImg}" alt="" class="imgContent">
+                    <img src="" alt="" class="imgContent">
                 </a>
                 <div class="judulCard">
                     <div class="kotakJudul">
@@ -56,7 +56,7 @@
                             <p>Duration :</p>
                         </div>
                         <div>
-                            <p>${dataForm[i].duration}</p>
+                            <p>{{$data.Duration}}</p>
                         </div>
                     </div>
                 </div>
@@ -64,10 +64,10 @@
                     <p>{{$data.Description}}</p>
                 </div>
                 <div class="techCheck">
-                    <img src="${dataForm[i].nodeJs}">
-                    <img src="${dataForm[i].reactJs}">
-                    <img src="${dataForm[i].vueJs}">
-                    <img src="${dataForm[i].typeScript}">
+                    <img src="{{$data.NodeIcon}}">
+                    <img src="{{$data.ReactIcon}}">
+                    <img src="{{$data.VueIcon}}">
+                    <img src="{{$data.TypeScriptIcon}}">
                 </div>
                 <div class="editDelete">
                     <a href="/form-edit-project/{{$index}}" class="edit">Edit</a>
@@ -79,10 +79,6 @@
     </div>
     
 
-    <script src="js/myProject.js"></script>
-    <script src="js/requiredForMyProjectForm.js"></script>
-    <script src="js/myProjectVisualization.js"></script>
-    <script src="js/myProjectCalcDur.js"></script>
-    <script src="js/myProjectDetail.js"></script>
+    <script src="../public/js/layoutingTech.js"></script>
 </body>
 </html>
