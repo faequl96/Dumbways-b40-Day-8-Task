@@ -162,7 +162,7 @@ func myProjectData(w http.ResponseWriter, r *http.Request) {
 	if typeScript == "TypeScript" {
 		typeScriptIcon = "../public/img/typescript.png"
 	}
-
+	fmt.Println(startDate)
 	layout := "2006-01-02"
 	startDateParse, _ := time.Parse(layout, startDate)
 	endDateParse, _ := time.Parse(layout, endDate)
@@ -213,7 +213,7 @@ func myProjectData(w http.ResponseWriter, r *http.Request) {
 
 	dataForm = append(dataForm, addNewDataForm)
 
-	fmt.Println(dataForm)
+	// fmt.Println(dataForm)
 
 	http.Redirect(w, r, "/project", http.StatusMovedPermanently)
 
@@ -333,6 +333,7 @@ func myProjectEdited(w http.ResponseWriter, r *http.Request) {
 	react := r.PostForm.Get("reactJs")
 	vue := r.PostForm.Get("vueJs")
 	typeScript := r.PostForm.Get("typeScript")
+	fmt.Println(node)
 	nodeIcon := ""
 	if node == "Node JS" {
 		nodeIcon = "../public/img/node.png"
